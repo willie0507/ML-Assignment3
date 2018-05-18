@@ -27,6 +27,9 @@ def load_images(dir):
 
     data.sort()
 
+    for c in range(len(data)):
+        data[c] = data[c][1]
+
     return data
 
 def load_label(dir):
@@ -45,6 +48,8 @@ def load_label(dir):
 
     for c in range(len(label)):
         label[c] = label[c][1]
+
+    label = preprocessing.LabelBinarizer().fit_transform(label)  # One-hot Encoding
 
     return label
 
@@ -86,8 +91,8 @@ def test_eval(sess, x_data, train_phase):
 
 
 # data preprocess by yourself
-for i in load_label(r"data/labels.csv"):
-    print(i)
+lbl = load_label(r"data/labels.csv")
+print("Number of labels:", len(lbl[0]))
 
 
 '''
