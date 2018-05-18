@@ -1,4 +1,6 @@
 import os
+import time
+from datetime import timedelta
 import numpy as np
 import pandas as pd
 import tensorflow as tf
@@ -15,6 +17,36 @@ EPOCHS = 1
 BATCH_SIZE = 10
 LOAD_PRETRAIN = False
 
+def load_images(dir):
+    data = []
+    for file in os.listdir(dir):
+        img = io.imread(dir + "/" + file)
+        img = transform.resize(img, (224, 224), mode="constant")
+        img = np.array(img, dtype=float)
+        data.append((file, img))
+
+    data.sort()
+
+    return data
+
+def load_label(dir):
+    fp = open(dir, 'r')
+    line = fp.readline()
+
+    label = []
+    while line:
+        idx = line.find(",")
+        label.append((line[:idx], line[idx + 1:-1]))
+        line = fp.readline()
+
+    fp.close()
+    label = label[1:]
+    label.sort()
+
+    for c in range(len(label)):
+        label[c] = label[c][1]
+
+    return label
 
 def softmax(x):
     return np.exp(x) / np.sum(np.exp(x), axis=0)
@@ -53,10 +85,14 @@ def test_eval(sess, x_data, train_phase):
     return tmp_pred
 
 
-# data preprocess by yourself 
+# data preprocess by yourself
+for i in load_label(r"data/labels.csv"):
+    print(i)
 
 
+'''
 if __name__ == '__main__':
+    start_time = time.time()
 
     x = tf.placeholder(dtype=tf.float32, shape=(None, INPUT_SIZE[0], INPUT_SIZE[1], INPUT_SIZE[2]), name='x')
     y = tf.placeholder(dtype=tf.float32, shape=(None, N_CLASSES), name='y')
@@ -84,14 +120,15 @@ if __name__ == '__main__':
         else:
             sess.run(init)
 
-        for i in range(EPOCHS):
+        for i in tqdm(range(EPOCHS)):
             train_eval(sess=sess, x_data=train_data, y_label=train_label, batch_size=BATCH_SIZE, 
                     train_phase=True, is_eval=False,epoch=i)
-        #saver.save(sess, 'model/model.ckpt')
+        # saver.save(sess, 'model/model.ckpt')
         ans = test_eval(sess=sess, x_data=test_data, train_phase=False)
 
 
-
-
+    end_time = time.time()
+    print("Time usage: " + str(timedelta(seconds=int(round(end_time - start_time)))))
+'''
 
 
