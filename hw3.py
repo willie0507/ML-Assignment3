@@ -111,7 +111,7 @@ def test_eval(sess, x_data, train_phase):
         tmp_logits = sess.run(logits, feed_dict={x: test_data, is_training: train_phase})
         tmp = softmax(np.squeeze(tmp_logits))
         tmp_pred.append(tmp)
-        tmp_pred = np.array(tmp_pred)
+    tmp_pred = np.array(tmp_pred)
 
     return tmp_pred
 
