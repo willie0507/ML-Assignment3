@@ -1,2 +1,14 @@
 # ML-Assignment3
-Deadline: 05/23(Wed) 11:59p.m
+Use conda to set the environment
+
+    conda env create -f requirments.yml
+    
+Activate the environment
+
+    source activate ML
+
+Run program
+
+    python hw3.py
+    
+    
